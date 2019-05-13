@@ -2,6 +2,7 @@ const iCal = require('node-ical');
 const moment = require('moment');
 const dbUtil = require('./../util/database');
 const createError = require('http-errors');
+const constants = require('./../util/const');
 
 const parse_calendar = (async (req, res, next) => {
     let result = [];
@@ -67,7 +68,10 @@ const parse_calendar = (async (req, res, next) => {
         result.sort((a, b) => {
             return new Date(a.start) - new Date(b.start);
         });
-        res.json(result);
+
+        let res_object = {...constants.httpAnswers.OK};
+        res_object["data"] = result;
+        res.json(res_object);
     });
 });
 
