@@ -26,6 +26,8 @@
                 "val":"MAILTO:joern.eisenbiegler@dhbw-karlsruhe.de"
                 }
         },...
+    ]
+}
 
 ```
 
