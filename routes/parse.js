@@ -12,7 +12,7 @@ const parse_calendar = (async (req, res, next) => {
     const day = req.params.day; //can be today or any date
     const minStart = req.params.start;
     const minEnd = req.params.end;
-    const filter = req.query.filter === undefined ? [] : req.query.filter.split(",");
+    const filter = req.query.categories === undefined ? [] : req.query.categories.split(",");
 
     // create the ical url
     const answer = await dbUtil.executeQuery("SELECT * FROM i_cal WHERE file = ?", [file,]);
