@@ -44,6 +44,7 @@ app.use(function (req, res, next) {
 });
 
 // add custom routes
+app.use('/rapla/:file/date/:day', parser);
 app.use('/rapla/:file/:user?', parser);
 
 // catch 404 and forward to error handler

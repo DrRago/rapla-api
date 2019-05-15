@@ -9,6 +9,7 @@ const parse_calendar = (async (req, res, next) => {
 
     let user = req.params.user;
     let file = req.params.file;
+    const day = req.params.day; //can be today or any date
 
     // create the ical url
     const answer = await dbUtil.executeQuery("SELECT * FROM i_cal WHERE file = ?", [file,]);
@@ -68,6 +69,28 @@ const parse_calendar = (async (req, res, next) => {
         result.sort((a, b) => {
             return new Date(a.start) - new Date(b.start);
         });
+
+        switch (day) {
+            case "today":
+                result = result.filter(event => moment(event.start).isSame(moment(), "day"));
+                break;
+            case "tomorrow":
+                result = result.filter(event => moment(event.start).isSame(moment(new Date()).add(1, 'days'), "day"));
+                break;
+            case "yesterday":
+                result = result.filter(event => moment(event.start).isSame(moment(new Date()).subtract(1, 'days'), "day"));
+                break;
+            case undefined:
+                break;
+            default:
+                const day_obj = moment(day);
+                if (!day_obj.isValid()) {
+                    next(createError(422, `${day} is not a valid date`));
+                    return
+                }
+                result = result.filter(event => moment(event.start).isSame(moment(day), "day"));
+                break;
+        }
 
         let res_object = {...constants.httpAnswers.OK};
         res_object["data"] = result;
