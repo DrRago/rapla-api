@@ -1,10 +1,11 @@
 # API Documentation
 
 ## Routes
-### GET /rapla/:file[/:user]
+### GET /rapla/:file[(/:user|/date/:day)]
 #### Request parameters
 - `file`: the requesting file for rapla (equal to raplas file url-parameter)
 - `user`: the rapla username to use to access the file (only needed on first request)
+- `day`: specify a day to request, can be a timestamp or on of following: [yesterday, today, tomorrow]
 
 #### Response example
 ##### Code 200 - OK
