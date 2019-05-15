@@ -12,8 +12,7 @@ const parse_calendar = (async (req, res, next) => {
     const day = req.params.day; //can be today or any date
     const minStart = req.params.start;
     const minEnd = req.params.end;
-
-    console.log(req.params);
+    const filter = req.query.filter === undefined ? [] : req.query.filter.split(",");
 
     // create the ical url
     const answer = await dbUtil.executeQuery("SELECT * FROM i_cal WHERE file = ?", [file,]);
@@ -38,7 +37,7 @@ const parse_calendar = (async (req, res, next) => {
         for (let k in data) {
             if (data.hasOwnProperty(k)) {
                 const ev = data[k];
-                if (data[k].type === 'VEVENT' && data[k].categories.includes("Lehrveranstaltung")) {
+                if (data[k].type === 'VEVENT' && data[k].categories.every(category => filter.length === 0 || filter.indexOf(category) >= 0)) {
                     // parameters of the event to return to user
                     let {start, end, uid, summary, description, location, categories, organizer} = ev;
                     // format the times
