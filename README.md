@@ -1,11 +1,13 @@
 # API Documentation
 
 ## Routes
-### GET /rapla/:file(/:user|/date/:day)?
+### GET /rapla/:file(/:user|/date/:day|/start/:start|/end/:end|/between/:start/:end)?
 #### Request parameters
 - `file`: the requesting file for rapla (equal to raplas file url-parameter)
 - `user`: the rapla username to use to access the file (only needed on first request)
 - `day`: specify a day to request, can be a timestamp or on of following: [yesterday, today, tomorrow]
+- `start`: minimum date: all events are later than this time
+- `end`: maximum date: all events are before this time
 
 #### Response example
 ##### Code 200 - OK
@@ -63,5 +65,3 @@
 #### Upcomming Features
 ##### additional request parameters
 - `categories`: filter by categories
-- `date_start`: minimum date for events
-- `date_end`: maximum date for events
