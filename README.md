@@ -1,7 +1,7 @@
 # API Documentation
 
 ## Routes
-### GET /rapla/:file[(/:user|/date/:day)]
+### GET /rapla/:file(/:user|/date/:day)?
 #### Request parameters
 - `file`: the requesting file for rapla (equal to raplas file url-parameter)
 - `user`: the rapla username to use to access the file (only needed on first request)
