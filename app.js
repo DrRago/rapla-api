@@ -44,6 +44,9 @@ app.use(function (req, res, next) {
 });
 
 // add custom routes
+app.use('/rapla/:file/start/:start', parser);
+app.use('/rapla/:file/end/:end', parser);
+app.use('/rapla/:file/between/:start/:end', parser);
 app.use('/rapla/:file/date/:day', parser);
 app.use('/rapla/:file/:user?', parser);
 

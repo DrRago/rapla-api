@@ -10,6 +10,10 @@ const parse_calendar = (async (req, res, next) => {
     let user = req.params.user;
     let file = req.params.file;
     const day = req.params.day; //can be today or any date
+    const minStart = req.params.start;
+    const minEnd = req.params.end;
+
+    console.log(req.params);
 
     // create the ical url
     const answer = await dbUtil.executeQuery("SELECT * FROM i_cal WHERE file = ?", [file,]);
@@ -69,6 +73,24 @@ const parse_calendar = (async (req, res, next) => {
         result.sort((a, b) => {
             return new Date(a.start) - new Date(b.start);
         });
+
+        if (minStart) {
+            const minStartObj = moment(minStart);
+            if (!minStartObj.isValid()) {
+                next(createError(422, `${minStart} is not a valid date`));
+                return
+            }
+            result = result.filter(event => moment(event.start).isAfter(minStartObj));
+        }
+
+        if (minEnd) {
+            const minEndObj = moment(minEnd);
+            if (!minEndObj.isValid()) {
+                next(createError(422, `${minEndObj} is not a valid date`));
+                return
+            }
+            result = result.filter(event => moment(event.start).isBefore(minEndObj));
+        }
 
         switch (day) {
             case "today":
