@@ -3,6 +3,8 @@ const moment = require('moment');
 const dbUtil = require('./../util/database');
 const createError = require('http-errors');
 const constants = require('./../util/const');
+const iCalGen = require('ical-generator');
+const cal = iCalGen({domain: 'drrago.de', name: 'Rapla Calendar'});
 
 const parse_calendar = (async (req, res, next) => {
     let result = [];
@@ -13,6 +15,8 @@ const parse_calendar = (async (req, res, next) => {
     const minStart = req.params.start;
     const minEnd = req.params.end;
     const filter = req.query.categories === undefined ? [] : req.query.categories.split(",");
+
+    const ical = req.query.ical !== undefined;
 
     // create the ical url
     const answer = await dbUtil.executeQuery("SELECT * FROM i_cal WHERE file = ?", [file,]);
@@ -43,7 +47,6 @@ const parse_calendar = (async (req, res, next) => {
                     // format the times
                     start = moment(start).format();
                     end = moment(end).format();
-
 
                     if (ev.rrule !== undefined) {
                         const rule = ev.rrule;
@@ -112,10 +115,17 @@ const parse_calendar = (async (req, res, next) => {
                 result = result.filter(event => moment(event.start).isSame(moment(day), "day"));
                 break;
         }
-
-        let res_object = {...constants.httpAnswers.OK};
-        res_object["data"] = result;
-        res.json(res_object);
+        if (ical) {
+            result.forEach(event => {
+                const {start, end, uid, summary, description, location} = event;
+                cal.createEvent({start, end, uid, summary, description, location});
+            });
+            cal.serve(res);
+        } else {
+            let res_object = {...constants.httpAnswers.OK};
+            res_object["data"] = result;
+            res.json(res_object);
+        }
     });
 });
 
