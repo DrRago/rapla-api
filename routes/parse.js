@@ -127,6 +127,8 @@ const parse_calendar = (async (req, res, next) => {
             res.json(res_object);
         }
     });
+    next(createError(503, "Internal rapla error"));
+    return;
 });
 
 module.exports = parse_calendar;
