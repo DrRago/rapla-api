@@ -13,7 +13,8 @@ docker-build-master:
   only:
     - master
   tags:
-    - NodeJS
+    - dhbw
+    - docker
 
 docker-build:
   # Official docker image.
@@ -27,4 +28,5 @@ docker-build:
   except:
     - master
   tags:
-    - NodeJS
+    - dhbw
+    - docker
